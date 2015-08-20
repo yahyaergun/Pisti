@@ -5,7 +5,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.Callable;
 
+import com.peakgames.pisti.comparator.CompareByPoints;
+import com.peakgames.pisti.comparator.CompareByWonCardSize;
 import com.peakgames.pisti.event.CardsWonEvent;
 import com.peakgames.pisti.model.Card;
 import com.peakgames.pisti.model.Deck;
@@ -13,7 +16,7 @@ import com.peakgames.pisti.model.Table;
 import com.peakgames.pisti.player.Bot;
 import com.peakgames.pisti.player.DummyBot;
 
-public class GameManager implements Observer{
+public class GameManager implements Observer, Callable<Bot>{
 	
 	private Table table;
 	private Deck deck;
@@ -26,7 +29,11 @@ public class GameManager implements Observer{
 		table = new Table();
 	}
 	
-	public void startGame(){
+	/**
+	 * Starts a Pisti game.
+	 * @returns winner bot.
+	 */
+	public Bot startGame(){
 		players = new ArrayList<>();
 		
 		DummyBot dummy1 = new DummyBot();
@@ -74,14 +81,20 @@ public class GameManager implements Observer{
 		
 		
 		//award most card winner
-		Collections.sort(players); // sort players by most cards won, ascending. see compareTo in Bot.java
+		Collections.sort(players, new CompareByWonCardSize()); // sort players by most cards won, ascending. see compareTo in Bot.java
 		players.get(3).addPoints(3); // last one has most cards.
 		System.out.println("The bot ["+players.get(3).toString()+"] won the most cards so it gets bonus 3 points!");
 				
-		System.out.println("SCORES");
+		System.out.println("###   SCORES   ###");
+		Collections.sort(players, new CompareByPoints()); // sort by points
 		for(Bot bot : players){
 			System.out.println(bot.toString()+ " has " + bot.getPoints() + " points.");
 		}
+		
+		Bot winner = players.get(3);
+		System.out.println("WINNER IS: "+ winner);
+		
+		return winner;
 	}
 	
 	public Table getTable() {
@@ -118,5 +131,10 @@ public class GameManager implements Observer{
 			currentPlayer.addWonCards(((CardsWonEvent) event).getCardSize());
 		}
 	}
-	
+
+	@Override
+	public Bot call() throws Exception {
+		return startGame();
+	}
+
 }

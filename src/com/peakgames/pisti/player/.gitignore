@@ -1,2 +1,6 @@
 /Bot.class
 /DummyBot.class
+/Bot$CompareByPoints.class
+/Bot$CompareByWonCardSize.class
+/CompareByPoints.class
+/CompareByWonCardSize.class
