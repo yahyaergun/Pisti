@@ -21,7 +21,7 @@ public class Table extends Observable{
 		clearPile(); // not needed, clear anyway.
 		Collections.reverse(v); // need to reverse the vector to get the ordering of cards correct on table
 		
-		for ( Card c : v){ //no .addAll because we want to notify players for each card.
+		for ( Card c : v){ //no .addAll because we want to notify smart bots for each card.
 			cardsOnPile.add(c);
 			setChanged();
 			notifyObservers(new CardThrownEvent(c));
@@ -56,7 +56,7 @@ public class Table extends Observable{
 		
 	}
 
-	private int calculatePoints() {
+	public int calculatePoints() {
 		int points = 0;
 
 		if (cardsOnPile.size() == 2 && cardsOnPile.elementAt(0).getValue() == cardsOnPile.elementAt(1).getValue()) {
@@ -83,7 +83,11 @@ public class Table extends Observable{
 		return points;
 	}
 	
-	private void clearPile() {
+	public Stack<Card> getCardsOnPile() {
+		return cardsOnPile;
+	}
+
+	public void clearPile() {
 		cardsOnPile.removeAllElements();
 	}
 	

@@ -11,7 +11,7 @@ import com.peakgames.pisti.model.Card;
  * @author Yahya
  *
  */
-public abstract class Bot implements Observer{
+public abstract class Bot implements Observer, Comparable<Bot>{
 	
 	protected List<Card> hand;
 	private int points;
@@ -36,6 +36,10 @@ public abstract class Bot implements Observer{
 		this.wonCardCount += wonCardCount;
 	}
 
+	public int getWonCardCount() {
+		return wonCardCount;
+	}
+
 	/**
 	 * implement card throwing strategy on extended classes for smart or dumb bots.
 	 */
@@ -49,6 +53,21 @@ public abstract class Bot implements Observer{
 		Collections.sort(hand); //sort by value, since Card overrides compareTo of Comparable with card values.
 		this.hand = hand;
 	}
+
+	//compare by won cards, so it will be easier to find who won the most cards with Collections.sort
+	@Override
+	public int compareTo(Bot bot) {
+		
+		if (wonCardCount == bot.wonCardCount){
+			return 0;
+		} else if (wonCardCount > bot.wonCardCount){
+			return 1;
+		} else {
+			return -1;
+		}
+	}
+	
+	
 	
 
 	

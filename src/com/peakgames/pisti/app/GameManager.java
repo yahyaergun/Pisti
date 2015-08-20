@@ -1,6 +1,7 @@
 package com.peakgames.pisti.app;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -18,6 +19,7 @@ public class GameManager implements Observer{
 	private Deck deck;
 	private List<Bot> players;
 	private Bot currentPlayer;
+	private int lastWinnerId; //keeps track of the last pile winner so it can be awarded
 	
 	public GameManager(){
 		deck = new Deck();
@@ -53,15 +55,32 @@ public class GameManager implements Observer{
 			
 			//start playing
 			for(int i = 0 ; i < 4 ; i++){
-				System.out.println("Round-"+i);
 				for(Bot bot : players){
 					currentPlayer = bot;
 					Card cardToThrow = currentPlayer.throwACard();
-					System.out.println("Bot "+ currentPlayer.toString() + "threw " + cardToThrow.toString());
+					System.out.println("Bot "+ currentPlayer.toString() + " threw " + cardToThrow.toString());
 					table.putOnPile(cardToThrow);
 				}
 			}
-			
+		}
+		
+		
+		
+		//award last pile winner
+		players.get(lastWinnerId).addPoints(table.calculatePoints());
+		players.get(lastWinnerId).addWonCards(table.getCardsOnPile().size());
+		System.out.println("Last pile goes to ["+players.get(lastWinnerId).toString()+"]");
+		table.clearPile();
+		
+		
+		//award most card winner
+		Collections.sort(players); // sort players by most cards won, ascending. see compareTo in Bot.java
+		players.get(3).addPoints(3); // last one has most cards.
+		System.out.println("The bot ["+players.get(3).toString()+"] won the most cards so it gets bonus 3 points!");
+				
+		System.out.println("SCORES");
+		for(Bot bot : players){
+			System.out.println(bot.toString()+ " has " + bot.getPoints() + " points.");
 		}
 	}
 	
@@ -93,6 +112,8 @@ public class GameManager implements Observer{
 	@Override
 	public void update(Observable paramObservable, Object event) {
 		if (event instanceof CardsWonEvent){
+			System.out.println(currentPlayer.toString() + " has won the pile!");
+			lastWinnerId = players.indexOf(currentPlayer);
 			currentPlayer.addPoints(((CardsWonEvent) event).getTotalPoints());
 			currentPlayer.addWonCards(((CardsWonEvent) event).getCardSize());
 		}
