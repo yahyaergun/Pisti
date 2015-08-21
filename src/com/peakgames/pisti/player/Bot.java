@@ -1,7 +1,6 @@
 package com.peakgames.pisti.player;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Observer;
 
@@ -42,7 +41,7 @@ public abstract class Bot implements Observer{
 	}
 
 	/**
-	 * implement card throwing strategy on extended classes for smart or dumb bots.
+	 * implement card throwing strategy on extended classes for new bot types.
 	 */
 	protected abstract Card whichCardToThrow();
 	

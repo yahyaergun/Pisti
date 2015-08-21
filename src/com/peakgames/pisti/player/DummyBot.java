@@ -8,7 +8,7 @@ import com.peakgames.pisti.model.Card;
 
 public class DummyBot extends Bot {
 	
-	private Card topCardOnPile; // only knows the card on top.
+	private Card currentCardOnPile; // only knows the card on top.
 
 	
 	public DummyBot(){
@@ -19,12 +19,12 @@ public class DummyBot extends Bot {
 	protected Card whichCardToThrow() {
 		Card jack = null;
 		
-		if(topCardOnPile == null){
+		if(currentCardOnPile == null){
 			return hand.get(0); //throw smallest card if the pile is empty.
 		}
 		
 		for(Card c : hand){
-			if(c.getValue()==topCardOnPile.getValue()){
+			if(c.getValue()==currentCardOnPile.getValue()){
 				return c;
 			} else if(c.getValue() == 11){
 				jack = c;
@@ -43,9 +43,9 @@ public class DummyBot extends Bot {
 	public void update(Observable observable, Object event) {
 		if(event instanceof CardThrownEvent){
 			CardThrownEvent cardThrown = (CardThrownEvent) event;
-			topCardOnPile = cardThrown.getCurrentCardOnTop();
+			currentCardOnPile = cardThrown.getCurrentCardOnTop();
 		} else if (event instanceof CardsWonEvent){
-			topCardOnPile = null;
+			currentCardOnPile = null;
 		}
 		
 	}

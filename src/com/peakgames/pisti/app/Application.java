@@ -10,6 +10,7 @@ import java.util.concurrent.Future;
 
 import com.peakgames.pisti.player.Bot;
 import com.peakgames.pisti.player.DummyBot;
+import com.peakgames.pisti.player.SmartBot;
 
 
 
@@ -25,7 +26,7 @@ public class Application {
         List<Callable<Bot>> tasks = new ArrayList<Callable<Bot>>();
         service = Executors.newFixedThreadPool(10);
         
-        for(int i=0; i<1000; i++){
+        for(int i=0; i<10000; i++){
         	tasks.add(new GameManager());
         }
         List<Future<Bot>> results = new ArrayList<Future<Bot>>();
@@ -37,6 +38,8 @@ public class Application {
 		    	   Bot bot = winner.get();
 		    	   if(bot instanceof DummyBot){
 		    		   dumbWins++;
+		    	   } else if (bot instanceof SmartBot){
+		    		   smartWins++;
 		    	   }
 		    }
 			
@@ -44,7 +47,8 @@ public class Application {
 			e.printStackTrace();
 		}
        
-       System.out.println("DUMB WINS: " + dumbWins);
+        System.out.println("DUMB WINS: " + dumbWins);
+        System.out.println("SMART WINS: " + smartWins);
         
 		long elapsedTime = System.nanoTime()-startTime;
 		System.out.println("Runtime :"+elapsedTime/1000000000L+" seconds.");

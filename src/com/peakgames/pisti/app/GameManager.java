@@ -15,6 +15,7 @@ import com.peakgames.pisti.model.Deck;
 import com.peakgames.pisti.model.Table;
 import com.peakgames.pisti.player.Bot;
 import com.peakgames.pisti.player.DummyBot;
+import com.peakgames.pisti.player.SmartBot;
 
 public class GameManager implements Observer, Callable<Bot>{
 	
@@ -38,19 +39,19 @@ public class GameManager implements Observer, Callable<Bot>{
 		
 		DummyBot dummy1 = new DummyBot();
 		DummyBot dummy2 = new DummyBot();
-		DummyBot dummy3 = new DummyBot();
-		DummyBot dummy4 = new DummyBot();
+		SmartBot smart1 = new SmartBot();
+		SmartBot smart2 = new SmartBot();
 		
 		players.add(dummy1);
 		players.add(dummy2);
-		players.add(dummy3);
-		players.add(dummy4);
+		players.add(smart1);
+		players.add(smart2);
 		
 		table.addObserver(this); //to keep scores.
 		table.addObserver(dummy1);
 		table.addObserver(dummy2);
-		table.addObserver(dummy3);
-		table.addObserver(dummy4);
+		table.addObserver(smart1);
+		table.addObserver(smart2);
 		
 		table.putInitialCards(deck.getFourCards());
 		
@@ -65,7 +66,7 @@ public class GameManager implements Observer, Callable<Bot>{
 				for(Bot bot : players){
 					currentPlayer = bot;
 					Card cardToThrow = currentPlayer.throwACard();
-					System.out.println("Bot "+ currentPlayer.toString() + " threw " + cardToThrow.toString());
+//					System.out.println("Bot "+ currentPlayer.toString() + " threw " + cardToThrow.toString());
 					table.putOnPile(cardToThrow);
 				}
 			}
@@ -74,7 +75,7 @@ public class GameManager implements Observer, Callable<Bot>{
 		
 		
 		//award last pile winner
-		players.get(lastWinnerId).addPoints(table.calculatePoints());
+		players.get(lastWinnerId).addPoints(Table.calculatePoints(table.getCardsOnPile()));
 		players.get(lastWinnerId).addWonCards(table.getCardsOnPile().size());
 		System.out.println("Last pile goes to ["+players.get(lastWinnerId).toString()+"]");
 		table.clearPile();
@@ -87,9 +88,9 @@ public class GameManager implements Observer, Callable<Bot>{
 				
 		System.out.println("###   SCORES   ###");
 		Collections.sort(players, new CompareByPoints()); // sort by points
-		for(Bot bot : players){
-			System.out.println(bot.toString()+ " has " + bot.getPoints() + " points.");
-		}
+//		for(Bot bot : players){
+//			System.out.println(bot.toString()+ " has " + bot.getPoints() + " points.");
+//		}
 		
 		Bot winner = players.get(3);
 		System.out.println("WINNER IS: "+ winner);
@@ -125,7 +126,7 @@ public class GameManager implements Observer, Callable<Bot>{
 	@Override
 	public void update(Observable paramObservable, Object event) {
 		if (event instanceof CardsWonEvent){
-			System.out.println(currentPlayer.toString() + " has won the pile!");
+//			System.out.println(currentPlayer.toString() + " has won the pile!");
 			lastWinnerId = players.indexOf(currentPlayer);
 			currentPlayer.addPoints(((CardsWonEvent) event).getTotalPoints());
 			currentPlayer.addWonCards(((CardsWonEvent) event).getCardSize());
