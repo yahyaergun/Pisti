@@ -41,8 +41,7 @@ public class Application {
 			scores.put(s, 0);
 		}
 		
-		final ExecutorService service; 
-        service = Executors.newFixedThreadPool(concurrentGames); //create fixed thread pool with arg
+		final ExecutorService service = Executors.newFixedThreadPool(concurrentGames); //create fixed thread pool with arg
         
         List<Callable<Bot>> tasks = new ArrayList<Callable<Bot>>(); //create callable list of tasks to start games simultaneously
         for(int i=0; i<totalGameCount; i++){
@@ -65,7 +64,6 @@ public class Application {
         System.out.println("Total games played : "+totalGameCount);
         for (Map.Entry<String, Integer> entry : scores.entrySet()) {
             System.out.println(entry.getKey() +" : " + entry.getValue() +" wins."); //print score
-           
         }
         
 		long elapsedTime = System.nanoTime()-startTime;
