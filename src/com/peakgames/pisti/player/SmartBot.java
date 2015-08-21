@@ -42,13 +42,14 @@ public class SmartBot extends Bot {
 			}
 		}
 		
-		return getCardWithMinCollectChance(); // no card on pile OR no chance to get the pile, so throw the card with minimum chance to be collected.
+		// no card on pile OR no chance to get the pile, so throw the card with minimum chance to be collected by other players.
+		return getCardWithMinCollectChance(); 
 	}
 	
 	
 	/**
-	 * Finds the card at hand which is least likely to be collected. (Maximum of the cards played, by value)
-	 * @return Card with lowest chance to get collected
+	 * Finds the card at hand which is least likely to be collected. (Maximum of the cards played in the game, by value)
+	 * @return Card with lowest chance to be collected
 	 */
 	private Card getCardWithMinCollectChance(){
 		
