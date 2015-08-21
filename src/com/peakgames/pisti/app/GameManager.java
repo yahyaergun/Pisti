@@ -1,5 +1,6 @@
 package com.peakgames.pisti.app;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,8 +15,6 @@ import com.peakgames.pisti.model.Card;
 import com.peakgames.pisti.model.Deck;
 import com.peakgames.pisti.model.Table;
 import com.peakgames.pisti.player.Bot;
-import com.peakgames.pisti.player.DummyBot;
-import com.peakgames.pisti.player.SmartBot;
 
 public class GameManager implements Observer, Callable<Bot>{
 	
@@ -25,9 +24,21 @@ public class GameManager implements Observer, Callable<Bot>{
 	private Bot currentPlayer;
 	private int lastWinnerId; //keeps track of the last pile winner so it can be awarded
 	
-	public GameManager(){
+	public GameManager(List<String> botNames){
 		deck = new Deck();
 		table = new Table();
+		players = new ArrayList<Bot>();
+		
+		//create player objects via reflection
+		for (String botName : botNames){
+			try {
+				players.add((Bot) newInstance(botName));
+			} catch (ClassNotFoundException | NoSuchMethodException	| InstantiationException | 
+					IllegalAccessException| IllegalArgumentException | InvocationTargetException e) {
+						System.err.println("No such bot class found: " + botName);
+						System.exit(1);
+			}
+		}
 	}
 	
 	/**
@@ -35,23 +46,14 @@ public class GameManager implements Observer, Callable<Bot>{
 	 * @returns winner bot.
 	 */
 	public Bot startGame(){
-		players = new ArrayList<>();
 		
-		DummyBot dummy1 = new DummyBot();
-		DummyBot dummy2 = new DummyBot();
-		SmartBot smart1 = new SmartBot();
-		SmartBot smart2 = new SmartBot();
 		
-		players.add(dummy1);
-		players.add(dummy2);
-		players.add(smart1);
-		players.add(smart2);
 		
 		table.addObserver(this); //to keep scores.
-		table.addObserver(dummy1);
-		table.addObserver(dummy2);
-		table.addObserver(smart1);
-		table.addObserver(smart2);
+		table.addObserver(players.get(0));
+		table.addObserver(players.get(1));
+		table.addObserver(players.get(2));
+		table.addObserver(players.get(3));
 		
 		table.putInitialCards(deck.getFourCards());
 		
@@ -72,28 +74,23 @@ public class GameManager implements Observer, Callable<Bot>{
 			}
 		}
 		
-		
-		
 		//award last pile winner
 		players.get(lastWinnerId).addPoints(Table.calculatePoints(table.getCardsOnPile()));
 		players.get(lastWinnerId).addWonCards(table.getCardsOnPile().size());
-		System.out.println("Last pile goes to ["+players.get(lastWinnerId).toString()+"]");
+//		System.out.println("Last pile goes to ["+players.get(lastWinnerId).toString()+"]");
 		table.clearPile();
 		
 		
 		//award most card winner
 		Collections.sort(players, new CompareByWonCardSize()); // sort players by most cards won, ascending. see compareTo in Bot.java
 		players.get(3).addPoints(3); // last one has most cards.
-		System.out.println("The bot ["+players.get(3).toString()+"] won the most cards so it gets bonus 3 points!");
+//		System.out.println("The bot ["+players.get(3).toString()+"] won the most cards so it gets bonus 3 points!");
 				
-		System.out.println("###   SCORES   ###");
+//		System.out.println("###   SCORES   ###");
 		Collections.sort(players, new CompareByPoints()); // sort by points
-//		for(Bot bot : players){
-//			System.out.println(bot.toString()+ " has " + bot.getPoints() + " points.");
-//		}
 		
 		Bot winner = players.get(3);
-		System.out.println("WINNER IS: "+ winner);
+//		System.out.println("WINNER IS: "+ winner);
 		
 		return winner;
 	}
@@ -136,6 +133,27 @@ public class GameManager implements Observer, Callable<Bot>{
 	@Override
 	public Bot call() throws Exception {
 		return startGame();
+	}
+	
+	/**
+	 * Create bot instances from classnames.
+	 * 
+	 * @param className
+	 * @return Bot instances.
+	 * @throws ClassNotFoundException
+	 * @throws NoSuchMethodException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 */
+	public static Bot newInstance(final String className) throws ClassNotFoundException, 
+															        NoSuchMethodException, 
+															        InstantiationException, 
+															        IllegalAccessException, 
+															        IllegalArgumentException, 
+															        InvocationTargetException{
+	  return (Bot) Class.forName(className).getConstructor().newInstance();
 	}
 
 }

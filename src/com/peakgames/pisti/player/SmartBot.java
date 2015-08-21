@@ -12,8 +12,7 @@ import com.peakgames.pisti.model.Table;
 
 public class SmartBot extends Bot {
 	
-//	List<Card> discardedCards; //knows which cards are played, cuz its smart.
-	Map<Integer, Integer> countMap; // card.value - how many times it's played. Bot's memory.
+	Map<Integer, Integer> countMap; // card.value <-> how many times it's played. Bot's memory.
 	Stack<Card> currentPile; //current pile of cards on table
 
 	public SmartBot() {
@@ -27,9 +26,7 @@ public class SmartBot extends Bot {
 	protected Card whichCardToThrow() {
 		Card jack = null;
 		
-		if(currentPile.isEmpty()){ // no card on pile, throw the card that has least chance to be pistied.
-			return getCardWithMinPistiChance();
-		} else { //cards available on pile
+		if(!currentPile.isEmpty()){ //cards available on pile
 			
 			for(Card c : hand){
 				if(c.getValue()==currentPile.peek().getValue()){
@@ -40,21 +37,20 @@ public class SmartBot extends Bot {
 			}
 			
 			//use jack if it worths it
-			if(jack!=null && Table.calculatePoints(currentPile) > 1 ){
+			if(jack!=null && Table.calculatePoints(currentPile) > 0 ){
 				return jack;
 			}
-			
 		}
 		
-		return hand.get(0);
+		return getCardWithMinCollectChance(); // no card on pile OR no chance to get the pile, so throw the card with minimum chance to be collected.
 	}
 	
 	
 	/**
-	 * Finds the card at hand which is least likely to be get pistied. (Maximum of the cards played, by value)
-	 * @return Card with lowest chance to get pisti'ed
+	 * Finds the card at hand which is least likely to be collected. (Maximum of the cards played, by value)
+	 * @return Card with lowest chance to get collected
 	 */
-	private Card getCardWithMinPistiChance(){
+	private Card getCardWithMinCollectChance(){
 		
 		Card tempCard = hand.get(0);
 		Integer count1, count2;
@@ -81,12 +77,12 @@ public class SmartBot extends Bot {
 			currentPile.push(c);
 			
 			int value = c.getValue();
-			Integer occurenceOfCardValue = countMap.get(value); //dont use primitives to avoid NullPointerExceptions.
+			Integer occurenceOfCardValue = countMap.get(value); //dont use primitives to avoid NullPointerException.
 			
 			if (occurenceOfCardValue == null){
 				countMap.put(value, 1);
 			} else {
-				countMap.put(value, occurenceOfCardValue++);
+				countMap.put(value, ++occurenceOfCardValue);
 			}
 		} else if(event instanceof CardsWonEvent){
 			currentPile.clear();

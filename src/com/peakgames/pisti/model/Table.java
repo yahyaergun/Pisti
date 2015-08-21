@@ -62,10 +62,10 @@ public class Table extends Observable{
 		if (cardsOnPile.size() == 2 && cardsOnPile.elementAt(0).getValue() == cardsOnPile.elementAt(1).getValue()) {
 			if (cardsOnPile.peek().getValue() == 11) {
 				points += 20;
-				System.out.println("Double Pisti!!");
+//				System.out.println("Double Pisti!!");
 			} else {
 				points += 10;
-				System.out.println("Pisti!");
+//				System.out.println("Pisti!");
 			}
 		}
 
