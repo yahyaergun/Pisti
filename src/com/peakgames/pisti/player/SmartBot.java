@@ -75,11 +75,12 @@ public class SmartBot extends Bot {
 	public void update(Observable observable, Object event) {
 		if(event instanceof CardThrownEvent){
 			Card c = ((CardThrownEvent) event).getCurrentCardOnTop();
-			currentPile.push(c);
+			currentPile.push(c);  //keep track of the pile
 			
 			int value = c.getValue();
 			Integer occurenceOfCardValue = countMap.get(value); //dont use primitives to avoid NullPointerException.
 			
+			//memorize cards by values.
 			if (occurenceOfCardValue == null){
 				countMap.put(value, 1);
 			} else {
