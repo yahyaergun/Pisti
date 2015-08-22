@@ -41,6 +41,7 @@ public class GameManager implements Observer, Callable<Bot>{
 			} catch (ClassNotFoundException | NoSuchMethodException	| InstantiationException | 
 					IllegalAccessException| IllegalArgumentException | InvocationTargetException e) {
 						System.err.println("No such bot class found: " + botName);
+						e.printStackTrace();
 						System.exit(1);
 			}
 		}
@@ -98,31 +99,6 @@ public class GameManager implements Observer, Callable<Bot>{
 		return winner;
 	}
 	
-	public Table getTable() {
-		return table;
-	}
-	public void setTable(Table table) {
-		this.table = table;
-	}
-	public Deck getDeck() {
-		return deck;
-	}
-	public void setDeck(Deck deck) {
-		this.deck = deck;
-	}
-	public List<Bot> getPlayers() {
-		return players;
-	}
-	public void setPlayers(List<Bot> players) {
-		this.players = players;
-	}
-	public Bot getCurrentPlayer() {
-		return currentPlayer;
-	}
-	public void setCurrentPlayer(Bot currentPlayer) {
-		this.currentPlayer = currentPlayer;
-	}
-
 	@Override
 	public void update(Observable paramObservable, Object event) {
 		if (event instanceof CardsWonEvent){

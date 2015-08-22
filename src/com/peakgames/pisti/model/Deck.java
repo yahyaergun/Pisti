@@ -31,18 +31,15 @@ public class Deck {
 	public Vector<Card> getFourCards(){
 		
 		Vector<Card> v = new Vector<>(4);
-		
 		for (int i = 0 ; i < 4 ; i++){
-			v.add(cards.pop());
+			v.add(cards.pop()); //pop the cards from deck and add to vector
 		}
-		
 		return v;
 	}
 	
 	public boolean isEmpty(){
 		return cards.isEmpty();
 	}
-	
 
 	public Stack<Card> getCards() {
 		return cards;

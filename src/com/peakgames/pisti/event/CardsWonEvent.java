@@ -16,7 +16,6 @@ public class CardsWonEvent extends PistiEvent{
 		this.cardSize = cardSize;
 	}
 	
-	
 	public int getTotalPoints() {
 		return totalPoints;
 	}

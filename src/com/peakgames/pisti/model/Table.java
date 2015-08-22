@@ -47,11 +47,10 @@ public class Table extends Observable{
 				// throw cardsWonEvent after putting card on stack
 				cardsOnPile.push(thrown);
 				setChanged();
-				notifyObservers(new CardThrownEvent(thrown)); //fire thrown event to notify players before clearing pile.
+				notifyObservers(new CardThrownEvent(thrown));
 				setChanged();
 				notifyObservers(new CardsWonEvent(calculatePoints(cardsOnPile), cardsOnPile.size()));
 				clearPile();
-				
 			} else {
 				cardsOnPile.push(thrown);
 				setChanged();

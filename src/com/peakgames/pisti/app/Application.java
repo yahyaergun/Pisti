@@ -29,6 +29,7 @@ public class Application {
 			totalGameCount = Integer.valueOf(params.get(1));
 		} catch (NumberFormatException e) {
 	        System.err.println("Argument" + args[0] + " OR "+ args[1] + " is not an integer.");
+	        e.printStackTrace();
 	        System.exit(1);
 	    }
 		

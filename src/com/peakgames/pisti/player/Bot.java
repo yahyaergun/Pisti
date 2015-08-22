@@ -8,7 +8,8 @@ import com.peakgames.pisti.model.Card;
 
 /**
  * Abstract Bot class to extend for Bot types.
- * Every extended class must override whichCardToThrow() and update() to implement a card throwing strategy and bot's logic for event types, respectively.
+ * Every extended class must override whichCardToThrow(), update() and toString().
+ * 
  * @author Yahya
  *
  */
@@ -42,9 +43,15 @@ public abstract class Bot implements Observer{
 	}
 
 	/**
-	 * implement card throwing strategy on extended classes for new bot types.
+	 * Implement card throwing strategy on extended classes for new bot types.
 	 */
 	protected abstract Card whichCardToThrow();
+	
+	/**
+	 * Return full classname like "com.foo.bar.AlienBot" on new bot implementations.
+	 * Used by scoreboard to list scores of different bot types.
+	 */
+	public abstract String toString();
 	
 	public int getPoints() {
 		return points;
