@@ -2,6 +2,11 @@ package com.peakgames.pisti.event;
 
 import com.peakgames.pisti.model.Card;
 
+/**
+ * Notifies observers that a new card is put on table.
+ * @author Yahya
+ *
+ */
 public class CardThrownEvent extends PistiEvent{
 	
 	private Card currentCardOnTop;

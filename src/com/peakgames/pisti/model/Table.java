@@ -8,6 +8,11 @@ import java.util.Vector;
 import com.peakgames.pisti.event.CardThrownEvent;
 import com.peakgames.pisti.event.CardsWonEvent;
 
+/**
+ * Table of the pisti game. Subject of the observer pattern.
+ * @author Yahya
+ *
+ */
 public class Table extends Observable{
 
 	private Stack<Card> cardsOnPile;

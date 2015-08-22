@@ -49,6 +49,10 @@ public class DummyBot extends Bot {
 		}
 		
 	}
-
+	
+	@Override
+	public String toString() {
+		return "com.peakgames.pisti.player.DummyBot";
+	}
 
 }

@@ -1,5 +1,10 @@
 package com.peakgames.pisti.event;
 
+/**
+ * Notifies observers that someone has won the pile.
+ * @author Yahya
+ *
+ */
 public class CardsWonEvent extends PistiEvent{
 	
 	private int totalPoints;

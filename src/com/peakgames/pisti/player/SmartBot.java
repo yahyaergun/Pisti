@@ -10,10 +10,15 @@ import com.peakgames.pisti.event.CardsWonEvent;
 import com.peakgames.pisti.model.Card;
 import com.peakgames.pisti.model.Table;
 
+/**
+ * Knows discarded cards, keeps track of the pile.
+ * @author Yahya
+ *
+ */
 public class SmartBot extends Bot {
 	
-	Map<Integer, Integer> countMap; // card.value <-> how many times it's played. Bot's memory.
-	Stack<Card> currentPile; //current pile of cards on table
+	private Map<Integer, Integer> countMap; // card.value <-> how many times it's played. Bot's memory.
+	private Stack<Card> currentPile; //current pile of cards on table
 
 	public SmartBot() {
 		super();
@@ -30,19 +35,19 @@ public class SmartBot extends Bot {
 			
 			for(Card c : hand){
 				if(c.getValue()==currentPile.peek().getValue()){
-					return c; //get pile on all costs if available
+					return c; //get pile at all costs if available (if pile has no points, still a chance to get 3 points by most cards won.)
 				} else if(c.getValue() == 11){
 					jack = c; //keep ref of jack at hand
 				}
 			}
 			
-			//use jack if it worths it
+			//use jack if it worths 2 points min. (1 by pile, 1 by jack itself)
 			if(jack!=null && Table.calculatePoints(currentPile) > 0 ){
 				return jack;
 			}
 		}
 		
-		// no card on pile OR no chance to get the pile, so throw the card with minimum chance to be collected by other players.
+		// no card on pile OR will not get the pile, so throw the card with minimum chance to be collected by other players.
 		return getCardWithMinCollectChance(); 
 	}
 	
@@ -67,8 +72,6 @@ public class SmartBot extends Bot {
 		}
 		
 		return tempCard;
-		
-		
 	}
 	
 	@Override
@@ -78,7 +81,7 @@ public class SmartBot extends Bot {
 			currentPile.push(c);  //keep track of the pile
 			
 			int value = c.getValue();
-			Integer occurenceOfCardValue = countMap.get(value); //dont use primitives to avoid NullPointerException.
+			Integer occurenceOfCardValue = countMap.get(value); //no primitives to avoid NullPointerException.
 			
 			//memorize cards by values.
 			if (occurenceOfCardValue == null){
@@ -90,6 +93,11 @@ public class SmartBot extends Bot {
 			currentPile.clear();
 		}
 
+	}
+
+	@Override
+	public String toString() {
+		return "com.peakgames.pisti.player.SmartBot";
 	}
 
 }

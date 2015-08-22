@@ -8,7 +8,7 @@ import com.peakgames.pisti.model.Card;
 
 /**
  * Abstract Bot class to extend for Bot types.
- * Every extended class must implement a card throwing strategy via overriding whichCardToThrow() and update() for event types.
+ * Every extended class must override whichCardToThrow() and update() to implement a card throwing strategy and bot's logic for event types, respectively.
  * @author Yahya
  *
  */

@@ -16,6 +16,11 @@ import com.peakgames.pisti.model.Deck;
 import com.peakgames.pisti.model.Table;
 import com.peakgames.pisti.player.Bot;
 
+/**
+ * Manages a pisti game. Implements Callable interface for concurrency.
+ * @author Yahya
+ *
+ */
 public class GameManager implements Observer, Callable<Bot>{
 	
 	private Table table;
@@ -32,7 +37,7 @@ public class GameManager implements Observer, Callable<Bot>{
 		//create player objects via reflection
 		for (String botName : botNames){
 			try {
-				players.add((Bot) newInstance(botName));
+				players.add(newInstance(botName));
 			} catch (ClassNotFoundException | NoSuchMethodException	| InstantiationException | 
 					IllegalAccessException| IllegalArgumentException | InvocationTargetException e) {
 						System.err.println("No such bot class found: " + botName);
@@ -47,10 +52,8 @@ public class GameManager implements Observer, Callable<Bot>{
 	 */
 	public Bot startGame(){
 		
-		
-		
 		table.addObserver(this); //to keep scores.
-		table.addObserver(players.get(0));
+		table.addObserver(players.get(0)); //observer pattern to notify players via events.
 		table.addObserver(players.get(1));
 		table.addObserver(players.get(2));
 		table.addObserver(players.get(3));
@@ -82,7 +85,7 @@ public class GameManager implements Observer, Callable<Bot>{
 		
 		
 		//award most card winner
-		Collections.sort(players, new CompareByWonCardSize()); // sort players by most cards won, ascending. see compareTo in Bot.java
+		Collections.sort(players, new CompareByWonCardSize()); // sort players by most cards won.
 		players.get(3).addPoints(3); // last one has most cards.
 //		System.out.println("The bot ["+players.get(3).toString()+"] won the most cards so it gets bonus 3 points!");
 				

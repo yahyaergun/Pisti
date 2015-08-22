@@ -12,9 +12,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-
 import com.peakgames.pisti.player.Bot;
-
 
 
 public class Application {
@@ -24,7 +22,7 @@ public class Application {
 		long startTime = System.nanoTime();
 		int concurrentGames = 0, totalGameCount = 0;
 		
-		List<String> params = Arrays.asList(args);
+		List<String> params = Arrays.asList(args); //convert to list so we can get rid of first 2 params later.
 		
 		try {
 			concurrentGames = Integer.valueOf(params.get(0));
@@ -41,9 +39,9 @@ public class Application {
 			scores.put(s, 0);
 		}
 		
-		final ExecutorService service = Executors.newFixedThreadPool(concurrentGames); //create fixed thread pool with arg
+		final ExecutorService service = Executors.newFixedThreadPool(concurrentGames); //create fixed thread pool with desired concurrent game count.
         
-        List<Callable<Bot>> tasks = new ArrayList<Callable<Bot>>(); //create callable list of tasks to start games simultaneously
+        List<Callable<Bot>> tasks = new ArrayList<Callable<Bot>>(); //create callable list of tasks to start games simultaneously on the mark via invokeAll
         for(int i=0; i<totalGameCount; i++){
         	tasks.add(new GameManager(params));
         }
@@ -54,7 +52,7 @@ public class Application {
 			
 			for(Future<Bot> winner : results){
 		    	   Bot bot = winner.get();
-		    	   scores.put(bot.getClass().toString().substring(6), scores.get(bot.getClass().toString().substring(6))+1);		    	   
+		    	   scores.put(bot.toString(), scores.get(bot.toString())+1);		    	   
 		    }
 			
 		} catch (InterruptedException | ExecutionException e) {
@@ -63,7 +61,7 @@ public class Application {
        
         System.out.println("Total games played : "+totalGameCount);
         for (Map.Entry<String, Integer> entry : scores.entrySet()) {
-            System.out.println(entry.getKey() +" : " + entry.getValue() +" wins."); //print score
+            System.out.println(entry.getKey() +" : " + entry.getValue() +" wins.");
         }
         
 		long elapsedTime = System.nanoTime()-startTime;
