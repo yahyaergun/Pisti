@@ -12,12 +12,17 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
 import com.peakgames.pisti.player.Bot;
 
 
 public class Application {
 	
 	public static void main(String[] args) {
+		
+		if(args.length != 6){
+			throw new ArrayIndexOutOfBoundsException("Arguments missing. Example usage: java -cp pisti.jar com.peakgames.pisti.app.Application <concurrentGameCount> <totalGameCount> <Bot1 classname> <Bot2 classname> <Bot3 classname> <Bot4 classname>");
+		}
 		
 		long startTime = System.nanoTime();
 		int concurrentGames = 0, totalGameCount = 0;
@@ -28,7 +33,7 @@ public class Application {
 			concurrentGames = Integer.valueOf(params.get(0));
 			totalGameCount = Integer.valueOf(params.get(1));
 		} catch (NumberFormatException e) {
-	        System.err.println("Argument" + args[0] + " OR "+ args[1] + " is not an integer.");
+	        System.err.println("Argument " + args[0] + " OR "+ args[1] + " is not an integer.");
 	        e.printStackTrace();
 	        System.exit(1);
 	    }
